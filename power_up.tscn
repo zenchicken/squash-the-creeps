@@ -1,0 +1,72 @@
+[gd_scene load_steps=7 format=3 uid="uid://dcq02squqdekv"]
+
+[ext_resource type="Script" path="res://power_up.gd" id="1_2ytcp"]
+[ext_resource type="PackedScene" uid="uid://bsbrfhlfdo82l" path="res://art/coin.glb" id="1_keyna"]
+
+[sub_resource type="Animation" id="Animation_3p4cp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Character:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 3.14159, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_od15s"]
+resource_name = "spin"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Character:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 3.14159, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fchyg"]
+_data = {
+"RESET": SubResource("Animation_3p4cp"),
+"spin": SubResource("Animation_od15s")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mvspf"]
+height = 0.818444
+radius = 1.06542
+
+[node name="PowerUp" type="Node3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+script = ExtResource("1_2ytcp")
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Character" parent="Pivot" instance=ExtResource("1_keyna")]
+transform = Transform3D(-1, 0, 2.53518e-06, 0, 1, 0, -2.53518e-06, 0, -1, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "spin"
+libraries = {
+"": SubResource("AnimationLibrary_fchyg")
+}
+
+[node name="PowerupDetector" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerupDetector"]
+transform = Transform3D(-4.48343e-08, 1, -1.44261e-11, -0.99967, -4.48198e-08, -0.0256884, -0.0256884, -1.1373e-09, 0.99967, 0, -0.0160093, 0)
+shape = SubResource("CylinderShape3D_mvspf")
+
+[connection signal="body_entered" from="PowerupDetector" to="." method="_on_powerup_detector_body_entered"]

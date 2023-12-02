@@ -1,0 +1,7 @@
+- Add coins to buy powerups
+- Change background color
+- Change the look of the monsters
+- Change the look of the player
+
+Gameplay
+- 
